@@ -1,9 +1,23 @@
 var express = require('express');
 var router = express.Router();
 
+var tokenConfig = require('../conf/token_conf').slack;
+const { RTMClient } = require('@slack/client');
+const slackToken = tokenConfig.slackToken;
+
+const rtm = new RTMClient(slackToken, {logLevel: 'error'});
+rtm.start();
+
 var mysql_dbc = require('../conf/db_con')();
 var connection = mysql_dbc.init();
 mysql_dbc.test_open(connection);
+
+rtm.on('message', (message) => {
+    var channel = message.channel;
+    var text = message.text;
+
+    rtm.sendMessage(text, channel);
+});
 
 // http://localhost:9090/keyboard
 router.get('/', function(req, res) {

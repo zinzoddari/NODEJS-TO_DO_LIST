@@ -62,3 +62,6 @@ typings/
 
 #db_config
 db_info.js
+
+#tokenConfig
+token_conf.js
